@@ -60,23 +60,23 @@ class Basys3Platform(Xilinx7SeriesPlatform):
         # Integrated 100MHz clock
         Resource("CLK100", 0, Pins("W5", dir="i"), Clock(100e6), Attrs(IOSTANDARD="LVCMOS33")),
 
-        # Onboard LEDs: LD[0-15]
-        Resource("LD", 0, Pins("U16", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 1, Pins("E19", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 2, Pins("U19", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 3, Pins("V19", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 4, Pins("W18", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 5, Pins("U15", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 6, Pins("U14", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 7, Pins("V14", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 8, Pins("V13", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 9, Pins("V3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 10, Pins("W3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 11, Pins("U3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 12, Pins("P3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 13, Pins("N3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 14, Pins("P1", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
-        Resource("LD", 15, Pins("L1", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        # Onboard LEDs: led[0-15]
+        Resource("led", 0, Pins("U16", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 1, Pins("E19", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 2, Pins("U19", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 3, Pins("V19", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 4, Pins("W18", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 5, Pins("U15", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 6, Pins("U14", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 7, Pins("V14", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 8, Pins("V13", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 9, Pins("V3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 10, Pins("W3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 11, Pins("U3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 12, Pins("P3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 13, Pins("N3", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 14, Pins("P1", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
+        Resource("led", 15, Pins("L1", dir="o"), Attrs(IOSTANDARD="LVCMOS33")),
 
         # Onboard switches: SW[0-15]
         Resource("SW", 0, Pins("V17", dir="i"), Attrs(IOSTANDARD="LVCMOS33")),
@@ -196,6 +196,18 @@ class Basys3Platform(Xilinx7SeriesPlatform):
         djtgcfg = os.environ.get("DJTGCFG", "djtgcfg")
         with products.extract("{}.bit".format(name)) as bitstream_filename:
             subprocess.run([djtgcfg, "prog", "-d", "Basys3", "-i", "0", "-f", bitstream_filename], check=True)
+'''
+	def toolchain_program(self, products, name):
+		openocd = os.environ.get("OPENOCD", "openocd")
+		with products.extract("{}.bit".format(name)) as bitstream_filename:
+			subprocess.check_call([openocd,
+				"-c", "source [find board/kcu105.cfg]; init; pld load 0 {}; exit"
+					  .format(bitstream_filename)
+			])
+    # openocd -f ${INSTALL_DIR}/${FPGA_FAM}/conda/envs/${FPGA_FAM}/share/openocd/scripts/board/digilent_arty.cfg -c "init; pld load 0 top.bit; exit"
+    # FPGA_FAM is xc7
+'''
+
 
 if __name__ == "__main__":
     from .test.blinky import *
