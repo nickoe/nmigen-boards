@@ -190,20 +190,14 @@ class Basys3Platform(Xilinx7SeriesPlatform):
             Subsignal("P10", Pins("N1")),
             Attrs(IOSTANDARD="LVCMOS33")
         ),
-
-        # Onboard SPI flash
-        *SPIFlashResources(0,
-            cs="K19",
-            clk="C11",
-            mosi="D18",
-            miso="D19",
-            wp="G18",
-            hold="F18",
-            attrs=Attrs(IOSTANDARD="LVCMOS33")
-        ),
     ]
 
     def toolchain_program(self, products, name):
         djtgcfg = os.environ.get("DJTGCFG", "djtgcfg")
         with products.extract("{}.bit".format(name)) as bitstream_filename:
             subprocess.run([djtgcfg, "prog", "-d", "Basys3", "-i", "0", "-f", bitstream_filename], check=True)
+
+if __name__ == "__main__":
+    from .test.blinky import *
+    Basys3Platform().build(Blinky(), do_program=True)
+
