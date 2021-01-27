@@ -211,5 +211,6 @@ class Basys3Platform(Xilinx7SeriesPlatform):
 
 if __name__ == "__main__":
     from .test.blinky import *
-    Basys3Platform().build(Blinky(), do_program=True)
+    #Basys3Platform(toolchain="Vivado").build(Blinky(), do_program=False)
+    Basys3Platform(toolchain="Symbiflow").build(Blinky(), do_program=False)
 

@@ -216,4 +216,4 @@ class ArtyA7Platform(Xilinx7SeriesPlatform):
 
 if __name__ == "__main__":
     from .test.blinky import *
-    ArtyA7Platform().build(Blinky(), do_program=True)
+    ArtyA7Platform(toolchain="Symbiflow").build(Blinky(), do_program=False)
