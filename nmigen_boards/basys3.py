@@ -190,6 +190,17 @@ class Basys3Platform(Xilinx7SeriesPlatform):
             Subsignal("P10", Pins("N1")),
             Attrs(IOSTANDARD="LVCMOS33")
         ),
+
+        # Onboard SPI flash
+        *SPIFlashResources(0,
+            cs_n="K19",
+            clk="C11",
+            copi="D18",
+            cipo="D19",
+            wp_n="G18",
+            hold_n="F18",
+            attrs=Attrs(IOSTANDARD="LVCMOS33")
+        ),
     ]
 
     def toolchain_program(self, products, name):
